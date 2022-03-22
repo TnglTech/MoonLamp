@@ -1,6 +1,6 @@
 import paho.mqtt.client
 
-DEVICE_ID_FILENAME = '/sys/class/net/eth0/address'
+DEVICE_ID_FILENAME = '/sys/class/net/wlan0/address'
 
 # MQTT Topic Names
 TOPIC_SET_LAMP_CONFIG = "lamp/set_config"
@@ -20,7 +20,7 @@ def client_state_topic(client_id):
 
 def broker_bridge_connection_topic():
     device_id = get_device_id()
-    return '$SYS/broker/connection/{}_lampi_broker/state'.format(device_id)
+    return '$SYS/broker/connection/{}_lamp_broker/state'.format(device_id)
 
 
 # MQTT Broker Connection info

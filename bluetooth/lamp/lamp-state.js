@@ -2,7 +2,7 @@ var events = require('events');
 var util = require('util');
 var mqtt = require('mqtt');
 
-function LampiState() {
+function LampState() {
     events.EventEmitter.call(this);
 
     this.is_on = true;
@@ -72,23 +72,23 @@ function LampiState() {
     
 }
 
-util.inherits(LampiState, events.EventEmitter);
+util.inherits(LampState, events.EventEmitter);
 
-LampiState.prototype.set_onoff = function(is_on) {
+LampState.prototype.set_onoff = function(is_on) {
     this.is_on = is_on;
     var tmp = {'client': this.clientId, 'on': this.is_on };
     this.mqtt_client.publish('lamp/set_config', JSON.stringify(tmp));
     console.log('is_on = ', this.is_on, ' msg: ', JSON.stringify(tmp));
 };
 
-LampiState.prototype.set_brightness = function(brightness) {
+LampState.prototype.set_brightness = function(brightness) {
     this.brightness = brightness;
     var tmp = {'client': this.clientId, 'brightness' : this.brightness / 0xFF};
     this.mqtt_client.publish('lamp/set_config', JSON.stringify(tmp));
     console.log('brightness = ', this.brightness);
 };
 
-LampiState.prototype.set_hsv = function(hue, saturation, value) {
+LampState.prototype.set_hsv = function(hue, saturation, value) {
     this.hue = hue;
     this.saturation = saturation;
     this.value = value;
@@ -98,4 +98,4 @@ LampiState.prototype.set_hsv = function(hue, saturation, value) {
     console.log('hsv = ', this.hue, this.saturation, this.value);
 };
 
-module.exports = LampiState;
+module.exports = LampState;

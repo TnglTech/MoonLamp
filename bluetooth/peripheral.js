@@ -1,20 +1,20 @@
 #! /usr/bin/env node
 var child_process = require('child_process');
-var device_id = child_process.execSync('cat /sys/class/net/eth0/address | sed s/://g').toString().replace(/\n$/, '');
+var device_id = child_process.execSync('cat /sys/class/net/wlan0/address | sed s/://g').toString().replace(/\n$/, '');
 
-process.env['BLENO_DEVICE_NAME'] = 'LAMPI ' + device_id;
+process.env['BLENO_DEVICE_NAME'] = 'MOONLAMP ' + device_id;
 
-var serviceName = 'LampiService';
+var serviceName = 'LampService';
 var bleno = require('bleno');
 var mqtt = require('mqtt');
  
-var LampiState = require('./lamp/lampi-state');
-var LampiService = require('./lamp/lampi-service');
+var LampState = require('./lamp/lamp-state');
+var LampService = require('./lamp/lamp-service');
 var DeviceInfoService = require('./device-info-service');
 var WifiService = require('./wifi/wifi-service');
 
-var lampiState = new LampiState();
-var lampiService = new LampiService( lampiState );
+var lampState = new LampState();
+var lampService = new LampService( lampState );
 var deviceInfoService = new DeviceInfoService( 'CWRU', 'LAMPI', device_id);
 var wifiService = new WifiService();
 
@@ -37,7 +37,7 @@ bleno.on('stateChange', function(state) {
     // We will also advertise the service ID in the advertising packet,
     // so it's easier to find.
     //
-    bleno.startAdvertising('LampiService', [lampiService.uuid, deviceInfoService.uuid], function(err)  {
+    bleno.startAdvertising('LampService', [lampService.uuid, deviceInfoService.uuid], function(err)  {
       if (err) {
         console.log(err);
       }
@@ -58,7 +58,7 @@ bleno.on('advertisingStart', function(err) {
     // along with our characteristics.
     //
     bleno.setServices([
-        lampiService,
+        lampService,
         wifiService,
         deviceInfoService,
     ]);

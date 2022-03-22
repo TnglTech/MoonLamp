@@ -2,7 +2,7 @@ import socket
 import fcntl
 import struct
 
-DEVICE_ID_FILENAME = '/sys/class/net/eth0/address'
+DEVICE_ID_FILENAME = '/sys/class/net/wlan0/address'
 
 
 def get_ip_address(ifname):

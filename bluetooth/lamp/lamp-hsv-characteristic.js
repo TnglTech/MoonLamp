@@ -3,8 +3,8 @@ var bleno = require('bleno');
 
 var CHARACTERISTIC_NAME = 'HSV';
 
-function LampiHSVCharacteristic(lampiState) {
-  LampiHSVCharacteristic.super_.call(this, {
+function LampHSVCharacteristic(lampState) {
+  LampHSVCharacteristic.super_.call(this, {
     uuid: '0002A7D3-D8A4-4FEA-8174-1736E808C066',
     properties: ['read', 'write', 'notify'],
     secure: [],
@@ -23,22 +23,22 @@ function LampiHSVCharacteristic(lampiState) {
   this._update = null;
 
   this.changed_hsv =  function(h, s, v) {
-    console.log('lampiState changed LampiHSVCharacteristic');
+    console.log('lampState changed LampHSVCharacteristic');
     if( this._update !== null ) {
         var data = new Buffer([h, s, v]);
         this._update(data);
     } 
   }
 
-  this.lampiState = lampiState;
+  this.lampState = lampState;
 
-  this.lampiState.on('changed-hsv', this.changed_hsv.bind(this));
+  this.lampState.on('changed-hsv', this.changed_hsv.bind(this));
 
 }
 
-util.inherits(LampiHSVCharacteristic, bleno.Characteristic);
+util.inherits(LampHSVCharacteristic, bleno.Characteristic);
 
-LampiHSVCharacteristic.prototype.onReadRequest = function(offset, callback) {
+LampHSVCharacteristic.prototype.onReadRequest = function(offset, callback) {
   console.log('onReadRequest');
   if (offset) {
     console.log('onReadRequest offset');
@@ -46,15 +46,15 @@ LampiHSVCharacteristic.prototype.onReadRequest = function(offset, callback) {
   }
   else {
     var data = new Buffer(3);
-    data.writeUInt8(Math.round(this.lampiState.hue), 0);
-    data.writeUInt8(Math.round(this.lampiState.saturation), 1);
-    data.writeUInt8(Math.round(this.lampiState.value), 2);
+    data.writeUInt8(Math.round(this.lampState.hue), 0);
+    data.writeUInt8(Math.round(this.lampState.saturation), 1);
+    data.writeUInt8(Math.round(this.lampState.value), 2);
     console.log('onReadRequest returning ', data);
     callback(this.RESULT_SUCCESS, data);
   }
 };
 
-LampiHSVCharacteristic.prototype.onWriteRequest = function(data, offset, withoutResponse, callback) {
+LampHSVCharacteristic.prototype.onWriteRequest = function(data, offset, withoutResponse, callback) {
     console.log('onWriteRequest');
     if(offset) {
         callback(this.RESULT_ATTR_NOT_LONG);
@@ -66,20 +66,20 @@ LampiHSVCharacteristic.prototype.onWriteRequest = function(data, offset, without
         var hue = data.readUInt8(0);
         var saturation = data.readUInt8(1);
         var value = data.readUInt8(2);
-        this.lampiState.set_hsv( hue, saturation, value );
+        this.lampState.set_hsv( hue, saturation, value );
         callback(this.RESULT_SUCCESS);
     }
 };
 
-LampiHSVCharacteristic.prototype.onSubscribe = function(maxValueSize, updateValueCallback) {
+LampHSVCharacteristic.prototype.onSubscribe = function(maxValueSize, updateValueCallback) {
     console.log('subscribe on ', CHARACTERISTIC_NAME);
     this._update = updateValueCallback;
 }
 
-LampiHSVCharacteristic.prototype.onUnsubscribe = function() {
+LampHSVCharacteristic.prototype.onUnsubscribe = function() {
     console.log('unsubscribe on ', CHARACTERISTIC_NAME);
     this._update = null;
 }
 
-module.exports = LampiHSVCharacteristic;
+module.exports = LampHSVCharacteristic;
 

@@ -3,8 +3,8 @@ var bleno = require('bleno');
 
 var CHARACTERISTIC_NAME = 'On / Off';
 
-var LampiOnOffCharacteristic = function(lampiState) {
-  LampiOnOffCharacteristic.super_.call(this, {
+var LampOnOffCharacteristic = function(lampState) {
+  LampOnOffCharacteristic.super_.call(this, {
     uuid: '0004A7D3-D8A4-4FEA-8174-1736E808C066',
     properties: ['read', 'write', 'notify'],
     secure: [],
@@ -23,7 +23,7 @@ var LampiOnOffCharacteristic = function(lampiState) {
   this._update = null;
 
   this.changed_onoff = function(is_on) {
-    console.log('lampiState changed LampiOnOffCharacteristic');
+    console.log('lampState changed LampOnOffCharacteristic');
     if( this._update !== null ) {
         console.log('this._update is ', typeof(this._update));
         console.log('updating new onoff uuid=', this.uuid);
@@ -37,15 +37,15 @@ var LampiOnOffCharacteristic = function(lampiState) {
     }
   }
 
-  this.lampiState = lampiState;
+  this.lampState = lampState;
 
-  this.lampiState.on('changed-onoff', this.changed_onoff.bind(this));
+  this.lampState.on('changed-onoff', this.changed_onoff.bind(this));
 
 }
 
-util.inherits(LampiOnOffCharacteristic, bleno.Characteristic);
+util.inherits(LampOnOffCharacteristic, bleno.Characteristic);
 
-LampiOnOffCharacteristic.prototype.onReadRequest = function(offset, callback) {
+LampOnOffCharacteristic.prototype.onReadRequest = function(offset, callback) {
   console.log('onReadRequest');
   if (offset) {
     console.log('onReadRequest offset');
@@ -53,7 +53,7 @@ LampiOnOffCharacteristic.prototype.onReadRequest = function(offset, callback) {
   }
   else {
     var data = new Buffer(1);
-    if (this.lampiState.is_on) {
+    if (this.lampState.is_on) {
         data.writeUInt8(0x01, 0);
     } else {
         data.writeUInt8(0x0, 0);
@@ -63,7 +63,7 @@ LampiOnOffCharacteristic.prototype.onReadRequest = function(offset, callback) {
   }
 };
 
-LampiOnOffCharacteristic.prototype.onWriteRequest = function(data, offset, withoutResponse, callback) {
+LampOnOffCharacteristic.prototype.onWriteRequest = function(data, offset, withoutResponse, callback) {
     if(offset) {
         callback(this.RESULT_ATTR_NOT_LONG);
     }
@@ -72,20 +72,20 @@ LampiOnOffCharacteristic.prototype.onWriteRequest = function(data, offset, witho
     }
     else {
         var new_onoff = data.readUInt8(0);
-        this.lampiState.set_onoff( new_onoff === 0x1);
+        this.lampState.set_onoff( new_onoff === 0x1);
         callback(this.RESULT_SUCCESS);
     }
 };
 
-LampiOnOffCharacteristic.prototype.onSubscribe = function(maxValueSize, updateValueCallback) {
+LampOnOffCharacteristic.prototype.onSubscribe = function(maxValueSize, updateValueCallback) {
     console.log('subscribe on ', CHARACTERISTIC_NAME);
     this._update = updateValueCallback;
 }
 
-LampiOnOffCharacteristic.prototype.onUnsubscribe = function() {
+LampOnOffCharacteristic.prototype.onUnsubscribe = function() {
     console.log('unsubscribe on ', CHARACTERISTIC_NAME);
     this._update = null;
 }
 
-module.exports = LampiOnOffCharacteristic;
+module.exports = LampOnOffCharacteristic;
 
