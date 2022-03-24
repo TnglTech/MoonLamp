@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from pybleno import *
 import sys
 import signal
