@@ -1,21 +1,19 @@
 from pybleno import *
 import array
 
-CHARACTERISTIC_NAME = "HSV"
+CHARACTERISTIC_NAME = "Brightness"
 
 
-def build_hsv_buffer(h, s, v):
-    data = array.array('B', [0] * 3)
-    writeUInt8(data, round(h), 0)
-    writeUInt8(data, round(s), 1)
-    writeUInt8(data, round(v), 2)
+def build_brightness_buffer(brightness):
+    data = array.array('B', [0] * 1)
+    writeUInt8(data, round(brightness), 0)
     return data
 
 
-class HSVCharacteristic(Characteristic):
+class BrightnessCharacteristic(Characteristic):
     def __init__(self, lamp_state):
         Characteristic.__init__(self, {
-            'uuid': '0002A7D3-D8A4-4FEA-8174-1736E808C066',
+            'uuid': '0003A7D3-D8A4-4FEA-8174-1736E808C066',
             'properties': ['read', 'write', 'notify'],
             'value': None,
             'descriptors': [
@@ -33,31 +31,28 @@ class HSVCharacteristic(Characteristic):
         self._lamp_state = lamp_state
         self._updateValueCallback = None
 
-    # TODO: setup lampstate callback for the notify function
+        # TODO: setup lampstate callback for the notify function
 
-    def changed_hsv(self, hue, saturation, value):
+    def changed_brightness(self, is_on):
         if self._updateValueCallback is not None:
-            data = build_hsv_buffer(hue, saturation, value)
+            data = build_brightness_buffer(is_on)
             self._updateValueCallback(data)
 
     def onReadRequest(self, offset, callback):
         if offset:
             callback(Characteristic.RESULT_ATTR_NOT_LONG, None)
         else:
-            st = self._lamp_state
-            data = build_hsv_buffer(st.hue, st.saturation, st.value)
+            data = build_brightness_buffer(self._lamp_state.brightness)
             callback(Characteristic.RESULT_SUCCESS, data)
 
     def onWriteRequest(self, data, offset, withoutResponse, callback):
         if offset:
             callback(Characteristic.RESULT_ATTR_NOT_LONG)
-        elif len(data) != 3:
+        elif len(data) != 1:
             callback(Characteristic.RESULT_INVALID_ATTRIBUTE_LENGTH)
         else:
-            hue = readUInt8(data, 0)
-            saturation = readUInt8(data, 1)
-            value = readUInt8(data, 2)
-            self._lamp_state.set_hsv(hue, saturation, value)
+            brightness = readUInt8(data, 0)
+            self._lamp_state.set_brightness(brightness)
             callback(Characteristic.RESULT_SUCCESS)
 
     def onSubscribe(self, maxValueSize, updateValueCallback):
@@ -71,4 +66,4 @@ class HSVCharacteristic(Characteristic):
         if callback is None:
             self._lamp_state.hsv_update_callback = None
         else:
-            self._lamp_state.hsv_update_callback = self.changed_hsv
+            self._lamp_state.hsv_update_callback = self.changed_brightness

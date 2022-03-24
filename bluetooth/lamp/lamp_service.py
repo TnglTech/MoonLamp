@@ -1,5 +1,7 @@
 from pybleno import *
-from .lamp_onoff_characteristic import *
+from .lamp_onoff_characteristic import OnOffCharacteristic
+from .lamp_brightness_characteristic import BrightnessCharacteristic
+from .lamp_hsv_characteristic import HSVCharacteristic
 
 
 class LampService(BlenoPrimaryService):
@@ -8,6 +10,8 @@ class LampService(BlenoPrimaryService):
         BlenoPrimaryService.__init__(self, {
             'uuid': 'ABCD',
             'characteristics': [
-                OnOffCharacteristic(self._lamp_state),
+                HSVCharacteristic(self._lamp_state),
+                BrightnessCharacteristic(self._lamp_state),
+                OnOffCharacteristic(self._lamp_state)
             ]
         })
