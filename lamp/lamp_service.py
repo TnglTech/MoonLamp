@@ -13,10 +13,9 @@ LAMP_STATE_FILENAME = "lamp_state"
 MQTT_CLIENT_ID = "lamp_service"
 
 FP_DIGITS = 2
-FLASH_DELAY = 0.3
 
 # LED Strip Config
-LED_COUNT = 30
+LED_COUNT = 69
 LED_PIN = 18
 LED_FREQ_HZ = 800000
 LED_DMA = 10
@@ -110,9 +109,6 @@ class LampService(object):
         try:
             if 'type' not in payload:
                 raise InvalidNotificationStructure()
-
-            if payload['type'] == 'doorbell_event':
-                self.handle_doorbell_event(payload)
             else:
                 raise InvalidNotificationStructure()
 
@@ -174,46 +170,18 @@ class LampService(object):
 
     def calculate_rgb(self, hue, saturation, brightness, is_on):
         pwm = float(LED_BRIGHTNESS)
-        r, g, b = 0.0, 0.0, 0.0
+        r, g, b = 0, 0, 0
 
         if is_on:
             rgb = colorsys.hsv_to_rgb(hue, saturation, 1.0)
-            r, g, b = tuple(channel * pwm * brightness
+            r, g, b = tuple(int(channel * pwm * brightness)
                             for channel in rgb)
         return r, g, b
-
-    def handle_doorbell_event(self, message):
-        try:
-            hue = 1.0
-            saturation = 1.0
-            brightness = 1.0
-            num_flashes = 5
-            if 'hue' in message:
-                hue = self.convert_to_lamp_values(message['hue'])
-            if 'saturation' in message:
-                saturation = self.convert_to_lamp_values(message['saturation'])
-            if 'brightness' in message:
-                brightness = self.convert_to_lamp_values(message['brightness'])
-            if 'num_flashes' in message:
-                num_flashes = message['num_flashes']
-            self.do_flashing(hue, saturation, brightness, num_flashes)
-        except InvalidNotificationStructure:
-            print("Error reading notification")
 
     def convert_to_lamp_values(self, value):
         if value < 0 or value > 1.0:
             raise InvalidLampConfig()
         return round(value, FP_DIGITS)
-
-    def do_flashing(self, hue, saturation, brightness, num_flashes):
-        r, g, b = self.calculate_rgb(hue, saturation, brightness, True)
-        for _ in range(0, num_flashes):
-            print("Thing")
-            self.lamp_driver.change_color(r, g, b)
-            time.sleep(FLASH_DELAY)
-            self.lamp_driver.change_color(0, 0, 0)
-            time.sleep(FLASH_DELAY)
-        self.write_current_settings_to_hardware()
 
 
 if __name__ == '__main__':
