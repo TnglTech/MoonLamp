@@ -11,11 +11,9 @@ class HSVCharacteristic: public BLECharacteristic {
       setHSV(255, 255);
     }
   
-    void setHSV(uint32_t hue, uint32_t saturation) {
+    void setHSV(uint16_t hue, uint16_t saturation) {
       uint32_t data = hue;
-      uint32_t val = 255;
       data += saturation << 8;
-      data += val << 16;
       setValue(data);
     }
 };

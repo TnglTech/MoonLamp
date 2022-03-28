@@ -4,6 +4,7 @@
     updates by chegewara
 */
 #include "EspMQTTClient.h"
+//#include "ArduinoJson.h"
 #include "LampState.h"
 #include "LampDriver.h"
 #include "BLE.h"
@@ -18,8 +19,9 @@ void setup() {
   Serial.println(ESP.getEfuseMac());
 
   ble = new BLE(lamp_state);
-  
-  ble->brightnessCharacteristic->setBrightness(128);
+//  uint8_t tp = 125;
+  ble->hsvCharacteristic->setHSV(255,255);
+  ble->brightnessCharacteristic->setBrightness(125);
   
   BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
   pAdvertising->addServiceUUID(DEVICE_INFO_SERVICE_UUID);
