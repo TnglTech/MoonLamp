@@ -31,14 +31,14 @@ class HSVCharacteristic(Characteristic):
         })
 
         self._lamp_state = lamp_state
-        self._updateValueCallback = None
+        self._update_value_callback = None
 
     # TODO: setup lampstate callback for the notify function
 
     def changed_hsv(self, hue, saturation, value):
-        if self._updateValueCallback is not None:
+        if self._update_value_callback is not None:
             data = build_hsv_buffer(hue, saturation, value)
-            self._updateValueCallback(data)
+            self._update_value_callback(data)
 
     def onReadRequest(self, offset, callback):
         if offset:
@@ -67,7 +67,7 @@ class HSVCharacteristic(Characteristic):
         self.set_update_callback(None)
 
     def set_update_callback(self, callback):
-        self._updateValueCallback = callback
+        self._update_value_callback = callback
         if callback is None:
             self._lamp_state.hsv_update_callback = None
         else:

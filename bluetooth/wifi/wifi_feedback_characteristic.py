@@ -1,14 +1,14 @@
 from pybleno import *
 import array
 
-CHARACTERISTIC_NAME = "Update Wifi"
+CHARACTERISTIC_NAME = "WiFi Feedback"
 
 
-class WiFiUpdateCharacteristic(Characteristic):
+class WiFiFeedbackCharacteristic(Characteristic):
     def __init__(self, wifi_state):
         Characteristic.__init__(self, {
-            'uuid': '3004A7D3-D8A4-4FEA-8174-1736E808C066',
-            'properties': ['write', 'notify'],
+            'uuid': '3005A7D3-D8A4-4FEA-8174-1736E808C066',
+            'properties': ['read', 'notify'],
             'value': None,
             'descriptors': [
                 Descriptor({
@@ -17,7 +17,7 @@ class WiFiUpdateCharacteristic(Characteristic):
                 }),
                 Descriptor({
                     'uuid': '2904',
-                    'value': array.array('B', [0x01, 0x00, 0x27, 0x00, 0x01, 0x00, 0x00])
+                    'value': array.array('B', [0x19, 0x00, 0x27, 0x00, 0x01, 0x00, 0x00])
                 })
             ]
         })
@@ -25,21 +25,17 @@ class WiFiUpdateCharacteristic(Characteristic):
         self._wifi_state = wifi_state
         self._update_value_callback = None
 
-    def send_notification(self, value):
+    def send_feedback(self, value):
         if self._update_value_callback is not None:
-            data = array.array('B', [0] * 1)
-            writeUInt8(data, value, 0)
+            data = bytes(value, 'utf-8')
             self._update_value_callback(data)
 
-    def onWriteRequest(self, data, offset, withoutResponse, callback):
+    def onReadRequest(self, offset, callback):
         if offset:
-            callback(Characteristic.RESULT_ATTR_NOT_LONG)
-        elif len(data) <= 0:
-            callback(Characteristic.RESULT_INVALID_ATTRIBUTE_LENGTH)
+            callback(Characteristic.RESULT_ATTR_NOT_LONG, None)
         else:
-            val = readUInt8(data, 0)
-            self._wifi_state.join_wifi()
-            callback(Characteristic.RESULT_SUCCESS)
+            data = bytes(self._wifi_state.last_attempt_feedback, 'utf-8')
+            callback(Characteristic.RESULT_SUCCESS, data)
 
     def onSubscribe(self, maxValueSize, updateValueCallback):
         self.set_update_callback(updateValueCallback)
@@ -50,6 +46,6 @@ class WiFiUpdateCharacteristic(Characteristic):
     def set_update_callback(self, callback):
         self._update_value_callback = callback
         if callback is not None:
-            self._wifi_state.update_action_callback = self.send_notification
+            self._wifi_state.feedback_callback = self.send_feedback
         else:
-            self._wifi_state.update_action_callback = None
+            self._wifi_state.feedback_callback = None

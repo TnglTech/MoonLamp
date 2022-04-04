@@ -32,14 +32,14 @@ class OnOffCharacteristic(Characteristic):
         })
 
         self._lamp_state = lamp_state
-        self._updateValueCallback = None
+        self._update_value_callback = None
 
         # TODO: setup lampstate callback for the notify function
 
     def changed_onoff(self, is_on):
-        if self._updateValueCallback is not None:
+        if self._update_value_callback is not None:
             data = build_onoff_buffer(is_on)
-            self._updateValueCallback(data)
+            self._update_value_callback(data)
 
     def onReadRequest(self, offset, callback):
         if offset:
@@ -65,8 +65,8 @@ class OnOffCharacteristic(Characteristic):
         self.set_update_callback(None)
 
     def set_update_callback(self, callback):
-        self._updateValueCallback = callback
+        self._update_value_callback = callback
         if callback is None:
-            self._lamp_state.hsv_update_callback = None
+            self._lamp_state.onoff_update_callback = None
         else:
-            self._lamp_state.hsv_update_callback = self.changed_onoff
+            self._lamp_state.onoff_update_callback = self.changed_onoff

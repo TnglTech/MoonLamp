@@ -6,7 +6,6 @@ sys.path.append("../bluetooth")
 # MQTT Topic Names
 TOPIC_SET_LAMP_CONFIG = "lamp/set_config"
 TOPIC_LAMP_CHANGE_NOTIFICATION = "lamp/changed"
-TOPIC_LAMP_ASSOCIATED = "lamp/associated"
 TOPIC_NOTIFICATION = "lamp/notification"
 
 
@@ -55,7 +54,6 @@ class LampState():
         new_state = json.loads(msg.payload.decode('utf-8'))
 
         if new_state['client'] == self._mqtt_client.client_id and self.has_received_first_update:
-            print("ignoring lamp changed update that we initiated")
             return
 
         new_onoff = new_state['on']

@@ -15,12 +15,12 @@ def get_device_id():
 
 
 def client_state_topic(client_id):
-    return 'lamp/connection/{}/state'.format(client_id)
+    return 'device/connection/{}/state'.format(client_id)
 
 
 def broker_bridge_connection_topic():
     device_id = get_device_id()
-    return '$SYS/broker/connection/{}_lamp_broker/state'.format(device_id)
+    return '$SYS/broker/connection/{}_moonlamp_broker/state'.format(device_id)
 
 
 # MQTT Broker Connection info

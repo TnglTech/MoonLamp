@@ -51,23 +51,27 @@ class WifiConfigService(object):
             if 'ssid' in new_config:
                 _ssid = new_config['ssid']
             else:
-                raise InvalidWifiConfig()
+                raise InvalidWifiConfig("SSID is missing.")
             if 'psk' in new_config:
                 _psk = new_config['psk']
 
-            if WifiConfigurator(_ssid, _psk).reconfigure():
+            result, msg = WifiConfigurator(_ssid, _psk).reconfigure()
+            if result:
                 print("updated wifi")
-                self.publish_config_change(True)
+                self.publish_config_change(True, message=msg)
             else:
-                self.publish_config_change(False)
-                raise InvalidWifiConfig()
-        except InvalidWifiConfig:
-            self.publish_config_change(False)
+                self.publish_config_change(False, message=msg)
+                #raise InvalidWifiConfig()
+        except InvalidWifiConfig as ex:
+            self.publish_config_change(False, message=(ex.message or "Invalid WiFi configuration data."))
             print("Error applying new wifi settings " + str(msg.payload))
 
-    def publish_config_change(self, status):
+    def publish_config_change(self, status, message=""):
         config = {'client': self.lastClient,
                   'status': status}
+        if message != "":
+            config['message'] = message
+
         self._client.publish(TOPIC_WIFI_RESPONSE,
                              json.dumps(config).encode('utf-8'), qos=2)
 

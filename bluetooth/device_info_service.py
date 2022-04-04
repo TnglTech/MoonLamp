@@ -70,3 +70,4 @@ class DeviceInfoService(BlenoPrimaryService):
                 SerialCharacteristic(serial)
             ]
         })
+        print("Started Device Info Service")

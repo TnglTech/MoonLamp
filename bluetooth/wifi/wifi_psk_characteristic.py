@@ -4,7 +4,7 @@ import array
 CHARACTERISTIC_NAME = "PSK"
 
 
-class SSIDCharacteristic(Characteristic):
+class PSKCharacteristic(Characteristic):
     def __init__(self, wifi_state):
         Characteristic.__init__(self, {
             'uuid': '3003A7D3-D8A4-4FEA-8174-1736E808C066',
@@ -28,7 +28,7 @@ class SSIDCharacteristic(Characteristic):
         if offset:
             callback(Characteristic.RESULT_ATTR_NOT_LONG, None)
         else:
-            data = bytes(self._wifi_state.psk, 'utf-8')
+            data = array.array('B', bytes(self._wifi_state.psk, 'utf-8'))
             callback(Characteristic.RESULT_SUCCESS, data)
 
     def onWriteRequest(self, data, offset, withoutResponse, callback):
@@ -37,7 +37,7 @@ class SSIDCharacteristic(Characteristic):
         elif len(data) <= 0:
             callback(Characteristic.RESULT_INVALID_ATTRIBUTE_LENGTH)
         else:
-            psk = str(data)
+            psk = data.decode("utf-8")
             self._wifi_state.set_psk(psk)
             callback(Characteristic.RESULT_SUCCESS)
 

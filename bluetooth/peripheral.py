@@ -7,15 +7,17 @@ from helper import Helper
 from utility.utility_state import UtilityState
 from lamp.lamp_state import LampState
 from wifi.wifi_state import WifiState
+from association.association_state import AssociationState
 from utility.utility_service import UtilityService
 from lamp.lamp_service import LampService
 from wifi.wifi_service import WifiService
+from association.association_service import AssociationService
 from device_info_service import DeviceInfoService
 import paho.mqtt.client as mqtt
 import os
 import json
 
-TOPIC_BLUETOOTH = 'lamp/bluetooth'
+TOPIC_BLUETOOTH = 'device/bluetooth'
 
 helper = Helper()
 
@@ -26,15 +28,19 @@ bleno = Bleno()
 utility_state = UtilityState(helper)
 utility_service = UtilityService(utility_state)
 
-lamp_state = LampState(helper)
-lamp_service = LampService(lamp_state)
+device_info_service = DeviceInfoService('MoonLamp', 'ML_0001', '000001')
 
 wifi_state = WifiState(helper)
 wifi_service = WifiService(wifi_state)
 
-device_info_service = DeviceInfoService('MoonLamp', 'ML_0001', '000001')
+association_state = AssociationState(helper)
+association_service = AssociationService(association_state)
 
-MQTT_CLIENT_ID = 'lamp_bt_central'
+lamp_state = LampState(helper)
+lamp_service = LampService(lamp_state)
+
+
+MQTT_CLIENT_ID = 'device_bt_central'
 MQTT_VERSION = mqtt.MQTTv311
 MQTT_BROKER_HOST = "localhost"
 MQTT_BROKER_PORT = 1883
@@ -68,6 +74,8 @@ def onAdvertisingStart(error):
         bleno.setServices([
             utility_service,
             device_info_service,
+            wifi_service,
+            association_service,
             lamp_service
         ], on_setServiceError)
 
@@ -99,7 +107,7 @@ def onAccept(clientAddress):
 
     bleno.updateRssi(updateRSSI)
 
-#bleno.on('accept', onAccept)
+bleno.on('accept', onAccept)
 
 
 def onDisconnect(clientAddress):
@@ -112,18 +120,21 @@ def onDisconnect(clientAddress):
     bt_lastRssi = 0
 
 
-#bleno.on('disconnect', onDisconnect)
+bleno.on('disconnect', onDisconnect)
 
 bleno.start()
 
 try:
     while True:
         pass
-except Exception:
-    pass
+finally:
+    print("running finally")
+    helper.db.close()
 
-bleno.stopAdvertising()
-bleno.disconnect()
+    bleno.stopAdvertising()
+    bleno.disconnect()
 
-print('terminated.')
-sys.exit(1)
+    print('Bluetooth daemon terminated.')
+    sys.exit(1)
+
+

@@ -8,10 +8,10 @@ class MQTTClient:
     MQTT_BROKER_PORT = 1883
     MQTT_BROKER_KEEP_ALIVE_SECS = 60
 
-    client_id = 'lamp_bt_peripheral'
+    client_id = 'device_bt_peripheral'
 
     def __init__(self):
-        self.client_state_topic = f"lamp/connection/{self.client_id}/state"
+        self.client_state_topic = f"device/connection/{self.client_id}/state"
         self.client = self._create_and_configure_broker_client()
         self.client.connect(self.MQTT_BROKER_HOST,
                             port=self.MQTT_BROKER_PORT,

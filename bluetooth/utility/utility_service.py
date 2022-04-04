@@ -1,4 +1,5 @@
 from pybleno import *
+from .device_name_characteristic import DeviceNameCharacteristic
 
 
 class UtilityService(BlenoPrimaryService):
@@ -9,6 +10,7 @@ class UtilityService(BlenoPrimaryService):
         BlenoPrimaryService.__init__(self, {
             'uuid': self.uuid,
             'characteristics': [
-
+                DeviceNameCharacteristic(utility_state)
             ]
         })
+        print("Started Utility Service")

@@ -17,3 +17,4 @@ class LampService(BlenoPrimaryService):
                 OnOffCharacteristic(self._lamp_state)
             ]
         })
+        print("Started Lamp Service")
