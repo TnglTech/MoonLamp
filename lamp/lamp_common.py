@@ -3,10 +3,10 @@ import paho.mqtt.client
 DEVICE_ID_FILENAME = '/sys/class/net/wlan0/address'
 
 # MQTT Topic Names
-TOPIC_SET_LAMP_CONFIG = "lamp/set_config"
-TOPIC_LAMP_CHANGE_NOTIFICATION = "lamp/changed"
-TOPIC_LAMP_ASSOCIATED = "lamp/associated"
-TOPIC_NOTIFICATION = "lamp/notification"
+TOPIC_SET_LAMP_CONFIG = "lamp_service/set_config"
+TOPIC_LAMP_CHANGE_NOTIFICATION = "lamp_service/changed"
+TOPIC_LAMP_ASSOCIATED = "lamp_service/associated"
+TOPIC_NOTIFICATION = "lamp_service/notification"
 
 
 def get_device_id():

@@ -61,7 +61,12 @@ class SerialCharacteristic(Characteristic):
 class DeviceInfoService(BlenoPrimaryService):
     uuid = '180a'
 
-    def __init__(self, manufacturer, model, serial):
+    def __init__(self, helper):
+        #TODO: Fix
+        manufacturer = 'MoonLamp'
+        model = 'ML_0001'
+        serial = '000001'
+        self._helper = helper
         BlenoPrimaryService.__init__(self, {
             'uuid': self.uuid,
             'characteristics': [

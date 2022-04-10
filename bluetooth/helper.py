@@ -2,7 +2,7 @@ from mqtt_client import MQTTClient
 import shelve
 
 DEVICE_ID_FILENAME = '/sys/class/net/wlan0/address'
-DB_FILENAME = "utility"
+DB_FILENAME = "services/utility_service"
 
 
 class Helper:

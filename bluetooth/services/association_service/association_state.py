@@ -21,10 +21,10 @@ class AssociationState:
         if self._db is None:
             raise Exception("DB is not open")
 
-        if 'association' not in self._db:
-            self._db['association'] = {}
-            self._db['association']['is_associated'] = False
-            self._db['association']['association_code'] = ""
+        if 'association_service' not in self._db:
+            self._db['association_service'] = {}
+            self._db['association_service']['is_associated'] = False
+            self._db['association_service']['association_code'] = ""
 
     def _setup_mqtt_callbacks(self):
         self._client.message_callback_add(TOPIC_DEVICE_ASSOCIATED,
@@ -40,18 +40,18 @@ class AssociationState:
 
     def get_association_code(self):
         if not self.is_associated:
-            return self._db['association']['association_code']
+            return self._db['association_service']['association_code']
         return ""
 
     def set_association_code(self, val):
-        self._db['association']['association_code'] = val
+        self._db['association_service']['association_code'] = val
 
     association_code = property(get_association_code, set_association_code)
 
     def get_is_associated(self):
-        return self._db['association']['is_associated']
+        return self._db['association_service']['is_associated']
 
     def set_is_associated(self, val):
-        self._db['association']['is_associated'] = val
+        self._db['association_service']['is_associated'] = val
 
     is_associated = property(get_is_associated, set_is_associated)

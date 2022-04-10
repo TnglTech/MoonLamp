@@ -1,8 +1,8 @@
 import sys
 import json
 
-TOPIC_WIFI_PUBLISH = 'wifi/set_config'
-TOPIC_WIFI_SUBSCRIBE = 'wifi/response'
+TOPIC_WIFI_PUBLISH = 'wifi_service/set_config'
+TOPIC_WIFI_SUBSCRIBE = 'wifi_service/response'
 
 
 class WifiState:
@@ -62,7 +62,7 @@ class WifiState:
         if self.psk:
             msg['psk'] = self.psk
         self._mqtt_client.publish_dict(TOPIC_WIFI_PUBLISH, msg, qos=1)
-        print("set wifi data")
+        print("set wifi_service data")
 
 
 

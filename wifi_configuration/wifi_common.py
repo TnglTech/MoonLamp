@@ -1,8 +1,8 @@
 import paho.mqtt.client
 
-TOPIC_WIFI_UPDATE = "wifi/set_config"
-TOPIC_WIFI_RESPONSE = "wifi/response"
-TOPIC_WIFI_CONFIG_SERVICE_STATE = "wifi/connection/wifi_config_service/state"
+TOPIC_WIFI_UPDATE = "wifi_service/set_config"
+TOPIC_WIFI_RESPONSE = "wifi_service/response"
+TOPIC_WIFI_CONFIG_SERVICE_STATE = "wifi_service/connection/wifi_config_service/state"
 
 # MQTT Broker Connection info
 MQTT_VERSION = paho.mqtt.client.MQTTv311

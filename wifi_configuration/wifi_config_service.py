@@ -57,14 +57,14 @@ class WifiConfigService(object):
 
             result, msg = WifiConfigurator(_ssid, _psk).reconfigure()
             if result:
-                print("updated wifi")
+                print("updated wifi_service")
                 self.publish_config_change(True, message=msg)
             else:
                 self.publish_config_change(False, message=msg)
                 #raise InvalidWifiConfig()
         except InvalidWifiConfig as ex:
             self.publish_config_change(False, message=(ex.message or "Invalid WiFi configuration data."))
-            print("Error applying new wifi settings " + str(msg.payload))
+            print("Error applying new wifi_service settings " + str(msg.payload))
 
     def publish_config_change(self, status, message=""):
         config = {'client': self.lastClient,
