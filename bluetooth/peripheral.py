@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-from services import *
 from pybleno import *
 import sys
 from helper import Helper
 import paho.mqtt.client as mqtt
 import os
 import json
-from services.service_importer import ServiceImporter
+from service_importer import ServiceImporter
 
 TOPIC_BLUETOOTH = 'device/bluetooth'
 

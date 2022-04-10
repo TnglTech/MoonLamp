@@ -8,7 +8,7 @@ class ServiceImporter:
         self.filenames = []
         self.class_names = []
         self.inst_classes = {}
-        for path in Path(__file__).parent.iterdir():
+        for path in (Path(__file__).parent / "services").iterdir():
             if path.is_dir() and str(path).endswith("_service"):
                 path_arr = str(path).split("/")
                 dirname = path_arr[-1]
