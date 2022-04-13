@@ -25,7 +25,7 @@ class HSVCharacteristic(Characteristic):
                 }),
                 Descriptor({
                     'uuid': '2904',
-                    'value': array.array('B', [0x04, 0x00, 0x27, 0x00, 0x01, 0x00, 0x00])
+                    'value': array.array('B', [0x07, 0x00, 0x27, 0x00, 0x01, 0x00, 0x00])
                 })
             ]
         })
