@@ -9,7 +9,7 @@ TOPIC_LAMP_CHANGE_NOTIFICATION = "lamp_service/changed"
 TOPIC_NOTIFICATION = "lamp_service/notification"
 
 
-class LampState():
+class RGBLampState():
     def __init__(self, helper):
         self._helper = helper
         self._mqtt_client = helper.mqtt_client

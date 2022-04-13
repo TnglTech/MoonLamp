@@ -1,8 +1,8 @@
 from pybleno import *
-from .lamp_state import LampState
-from .lamp_onoff_characteristic import OnOffCharacteristic
-from .lamp_brightness_characteristic import BrightnessCharacteristic
-from .lamp_hsv_characteristic import HSVCharacteristic
+from .rgblamp_state import LampState
+from .rgblamp_onoff_characteristic import OnOffCharacteristic
+from .rgblamp_brightness_characteristic import BrightnessCharacteristic
+from .rgblamp_hsv_characteristic import HSVCharacteristic
 
 
 class LampService(BlenoPrimaryService):
