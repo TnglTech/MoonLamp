@@ -4,12 +4,12 @@ import json
 sys.path.append("../bluetooth")
 
 # MQTT Topic Names
-TOPIC_SET_LAMP_CONFIG = "lamp_service/set_config"
-TOPIC_LAMP_CHANGE_NOTIFICATION = "lamp_service/changed"
-TOPIC_NOTIFICATION = "lamp_service/notification"
+TOPIC_SET_LAMP_CONFIG = "lamp/set_config"
+TOPIC_LAMP_CHANGE_NOTIFICATION = "lamp/changed"
+TOPIC_NOTIFICATION = "lamp/notification"
 
 
-class RGBLampState():
+class RgbLampState:
     def __init__(self, helper):
         self._helper = helper
         self._mqtt_client = helper.mqtt_client

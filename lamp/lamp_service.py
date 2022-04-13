@@ -10,7 +10,7 @@ from rpi_ws281x import Color, PixelStrip, ws
 from lamp_common import *
 
 LAMP_STATE_FILENAME = "lamp_state"
-MQTT_CLIENT_ID = "lamp_service"
+MQTT_CLIENT_ID = "rgb_lamp_service"
 
 FP_DIGITS = 2
 
@@ -81,7 +81,7 @@ class LampService(object):
                              qos=2, retain=True)
         self._client.subscribe(TOPIC_SET_LAMP_CONFIG, qos=1)
         self._client.subscribe(TOPIC_NOTIFICATION, qos=2)
-        # publish current lamp_service state at startup
+        # publish current rgb_lamp_service state at startup
         self.publish_config_change()
 
     def default_on_message(self, client, userdata, msg):
